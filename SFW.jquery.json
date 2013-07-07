@@ -1,0 +1,28 @@
+{
+  "name": "SFW",
+  "title": "stop forum-watching",
+  "description": "an anti-procrastination user script",
+  "version": "0.1.0",
+  "include": "http*://*",
+  "homepage": "https://github.com/heyeshuang/SFW",
+  "author": {
+    "name": "heyeshuang",
+    "email": "yeshuanghe@gmail.com",
+    "url": "heyeshuang.tk"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/heyeshuang/SFW.git"
+  },
+  "bugs": "https://github.com/heyeshuang/SFW/issues",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/heyeshuang/SFW/blob/master/LICENSE-MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": "*"
+  },
+  "keywords": []
+}
