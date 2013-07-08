@@ -34,7 +34,7 @@ module.exports = (grunt) ->
 
       dist:
         # CAUTION: load order
-        src: ["libs/jquery.js","libs/jquery.blockUI.js" , "js/<%= pkg.name %>.js"]
+        src: ["libs/jquery.js","libs/jquery.*.js" , "js/<%= pkg.name %>.js"]
         dest: "dist/<%= pkg.name %>.user.js"
 
     # uglify:
