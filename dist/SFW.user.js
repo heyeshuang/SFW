@@ -6,6 +6,7 @@
 // @description   an anti-procrastination user script
 // @include       http*://*
 // ==/UserScript==
+if (window.top != window.self) return;  //don't run on frames or iframes
 /*!
  * jQuery JavaScript Library v1.9.0
  * http://jquery.com/
@@ -10179,22 +10180,37 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 })();
 
 (function() {
-  var fridgeMagnet;
+  var configBox, fridgeMagnet, jW;
 
-  fridgeMagnet = '<div class="pinned">\n  <a href="###">Click Me</a>\n</div>';
+  jW = jQuery.noConflict();
 
-  $("body").append(fridgeMagnet);
+  fridgeMagnet = '<div class="pinned">\n  <a id="boxOpen" href="javascript:;">Click Me</a>\n</div>';
 
-  $(".pinned").css({
-    "padding": "0 10px",
-    "line-height": "50px",
-    "-moz-opacity": 0.7,
-    "opacity": 0.7,
-    "background": "#FC6",
-    "border": "1px solid #F90",
-    "position": "fixed",
-    "left": "10px",
-    "bottom": "10px"
+  configBox = '<div id="configBox" class="invisible" >\n  <h6>close me</h6>\n  <a id="boxClose" href="javascript:;">OK</a>\n</div>';
+
+  jW("body").append(fridgeMagnet);
+
+  jW("body").append(configBox);
+
+  jW("#boxOpen").click(function() {
+    return jW.blockUI({
+      message: jW("#configBox")
+    });
   });
+
+  jW("#boxClose").click(function() {
+    return jW.unblockUI();
+  });
+
+}).call(this);
+
+(function() {
+  var CSS, jW;
+
+  jW = jQuery.noConflict();
+
+  CSS = '.pinned{\n  padding:0 10px;\n  line-height:50px;\n  opacity:0.7;\n  background: #FC6;\n  border:1px solid #F90;\n  position:fixed;\n  left:10px;\n  bottom:10px;\n  }\n.invisible{\n  display:none;\n  cursor: default;\n  }';
+
+  jW("<style>" + CSS + "</style>").appendTo('head');
 
 }).call(this);

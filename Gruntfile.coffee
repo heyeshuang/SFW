@@ -1,6 +1,6 @@
 "use strict"
 module.exports = (grunt) ->
-  
+
   # Project configuration.
   grunt.initConfig
     
@@ -15,9 +15,10 @@ module.exports = (grunt) ->
 // @description   <%= pkg.description %>
 // @include       <%= pkg.include %>
 // ==/UserScript==
+if (window.top != window.self) return;  //don't run on frames or iframes
 
           '''
-    
+
     # Task configuration.
     clean:
       files: ["dist"]
@@ -25,7 +26,7 @@ module.exports = (grunt) ->
     coffee:
       compile:
         files:
-          'js/<%= pkg.name %>.js': 'src/<%= pkg.name %>.coffee'
+          'js/<%= pkg.name %>.js': 'src/*.coffee'
 
     concat:
       options:
@@ -40,7 +41,7 @@ module.exports = (grunt) ->
     # uglify:
       # options:
         # banner: "<%= banner %>"
-
+      
       # dist:
         # src: "<%= concat.dist.dest %>"
         # dest: "dist/<%= pkg.name %>.min.js"
@@ -55,7 +56,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-clean"
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks "grunt-contrib-concat"
-  # grunt.loadNpmTasks "grunt-contrib-uglify"
+  grunt.loadNpmTasks "grunt-contrib-uglify"
   grunt.loadNpmTasks "grunt-contrib-watch"
   
   # Default task.
