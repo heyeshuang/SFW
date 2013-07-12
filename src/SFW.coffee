@@ -36,19 +36,21 @@ pulseCount=->
     pulseClock=setTimeout pulseCount,1000
 
 timeoutAlarm=->
-  jW.blockUI
-    message:jW "#alarmBox"
+  easyDialog.open(
+    container: "alarmBox"
+  )
 
 jW("#boxOpen").click ->
-  jW.blockUI
-    message:jW "#configBox"
+  easyDialog.open(
+    container: "configBox"
+  )
 
 jW("#boxClose").click ->
-  jW.unblockUI()
+  easyDialog.close()
 
 jW("#setClock").click ->
   pulseCount()
-  jW.unblockUI()
+  easyDialog.close()
 
 jW("#boxCloseNG").click ->
   #do nothing

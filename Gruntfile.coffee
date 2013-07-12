@@ -35,7 +35,7 @@ if (window.top != window.self) return;  //don't run on frames or iframes
 
       dist:
         # CAUTION: load order
-        src: ["libs/jquery.js","libs/jquery.*.js" , "js/<%= pkg.name %>.js"]
+        src: ["libs/*.js" , "js/<%= pkg.name %>.js"]
         dest: "dist/<%= pkg.name %>.user.js"
 
     # uglify:
