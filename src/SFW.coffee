@@ -7,57 +7,73 @@ fridgeMagnet=
 alarmBox=
   '''
   <div id="alarmBox">
-    <h6>time for work babe</h6>
-    <a id="boxCloseNG" href="javascript:;">OK</a>
+    <h6>time to work babe</h6>
   </div>
   '''
 configBox=
   '''
   <div id="configBox">
-    <h6>close me</h6>
-    <a id="boxClose" href="javascript:;">OK</a>
-    <a id="setClock" href="javascript:;">I wanna work,but not now</a>
+    <div>我就休息
+    <input type="number" name="minuteField" id="minuteField" min="1" size="3"
+    onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')" />
+    分钟</div>
   </div>
   '''
+
+dateToWork=0
+setClock=()->
+  '''
+  设置休息时间并开始计时
+  '''
+  relaxMinutes=parseFloat(document.getElementById("minuteField").value)
+  console.log(relaxMinutes)
+  if isNaN(relaxMinutes)
+    return false
+  if relaxMinutes<=0
+    return false
+  dateClicking=new Date()
+  dateToWork=new Date()
+  dateToWork.setTime(dateClicking.getTime()+relaxMinutes*60*1000)
+  # TODO:localstorage it
+  console.log(dateClicking)
+  console.log(dateToWork)
+  startPulse()
+  return true
+
+startPulse=()->
+  '''
+  每秒检测一次，频率可以更低
+  我不喜欢轮询……有更好的方法吗？
+  '''
+  clearTimeout(startPulse)
+  dateNow=new Date()
+  if dateNow>=dateToWork
+    timeoutAlarm()
+  else
+    setTimeout(startPulse,1000)
+
+timeoutAlarm=()->
+  easyDialog.open(
+    container:
+      content:alarmBox
+  )
+
 divToAppend=document.createElement("div")
 divToAppend.innerHTML=fridgeMagnet
 document.body.appendChild(divToAppend)
-
-
-timeForRelax=10 #seconds
-pulseClock=0
-# pulseCount=->
-  # timeForRelax-=1
-  # clearTimeout(pulseClock)
-  # jW("#boxOpen").html(timeForRelax)
-  # if timeForRelax is 0 #T_T
-    # timeoutAlarm()
-  # else
-    # pulseClock=setTimeout pulseCount,1000
-
-# timeoutAlarm=->
-  # easyDialog.open(
-    # container: "alarmBox"
-  # )
-
-# jW("#boxOpen").click ->
-  # easyDialog.open(
-    # container: "configBox"
-  # )
 document.getElementById("boxOpen").onclick=()->
   easyDialog.open(
     container:
-      header:"hello"
       content:configBox
+      yesFn:setClock
       noFn:true
+      yesText:"真的"
   )
-
-# jW("#boxClose").click ->
-  # easyDialog.close()
-
-# jW("#setClock").click ->
-  # pulseCount()
-  # easyDialog.close()
-
-# jW("#boxCloseNG").click ->
-  #do nothing
+###
+TODO
+# 多标签状态共享
+  # 本地存储
+  # startPulse开始即运行
+# 取消已开始的计时
+# 有趣的关闭手段
+###

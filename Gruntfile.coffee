@@ -9,11 +9,13 @@ module.exports = (grunt) ->
     banner:'''
 // Copyright (c) <%= grunt.template.today('yyyy') %>, <%= pkg.author.name %>. (MIT Licensed)
 // ==UserScript==
+// @id             userscripts.org-a861f8c9-2981-4747-a244-a40ace20e46f@scriptish
 // @name          <%= pkg.name %>
 // @namespace     <%= pkg.homepage %>
 // @version       <%= pkg.version %>
 // @description   <%= pkg.description %>
 // @include       <%= pkg.include %>
+// @run-at         document-end
 // ==/UserScript==
 if (window.top != window.self) return;  //don't run on frames or iframes
 
@@ -26,7 +28,7 @@ if (window.top != window.self) return;  //don't run on frames or iframes
     coffee:
       compile:
         files:
-          'js/<%= pkg.name %>.js': 'src/*.coffee'
+          'js/<%= pkg.name %>.js': ['src/css.coffee','src/SFW.coffee']
 
     concat:
       options:
