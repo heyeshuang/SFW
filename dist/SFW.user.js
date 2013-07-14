@@ -7,6 +7,10 @@
 // @description   an anti-procrastination user script
 // @include       http*://*
 // @run-at         document-end
+// @grant       GM_getValue
+// @grant       GM_listValues
+// @grant       GM_setValue
+// @grant       GM_log
 // ==/UserScript==
 if (window.top != window.self) return;  //don't run on frames or iframes
 (function( win, undefined ){
@@ -845,15 +849,17 @@ var loaded = function(){
 }).call(this);
 
 (function() {
-  var alarmBox, configBox, dateToWork, divToAppend, fridgeMagnet, setClock, startPulse, timeoutAlarm;
+  var alarmBox, cancelClock, configBox, dateToWork, divToAppend, fridgeMagnet, pulseCount, setClock, startPulse, timeoutAlarm;
 
   fridgeMagnet = '<div class="pinned">\n  <a id="boxOpen" href="javascript:;">Click Me</a>\n</div>';
 
-  alarmBox = '<div id="alarmBox">\n  <h6>time to work babe</h6>\n</div>';
+  alarmBox = '<div id="alarmBox">\n  <div>time to work babe</div>\n</div>';
 
-  configBox = '<div id="configBox">\n  <div>我就休息\n  <input type="number" name="minuteField" id="minuteField" min="1" size="3"\n  onkeyup="this.value=this.value.replace(/[^0-9.]/g,\'\')" />\n  分钟</div>\n</div>';
+  configBox = '<div id="configBox">\n  <div>我就休息\n  <input type="number" name="minuteField" id="minuteField" min="1" size="3"\n  value="1" onkeyup="this.value=this.value.replace(/[^0-9.]/g,\'\')" />\n  分钟！</div>\n</div>';
 
   dateToWork = 0;
+
+  pulseCount = 0;
 
   setClock = function() {
     '设置休息时间并开始计时';
@@ -863,14 +869,14 @@ var loaded = function(){
     if (isNaN(relaxMinutes)) {
       return false;
     }
-    if (relaxMinutes <= 0) {
+    if (relaxMinutes <= 0.01) {
       return false;
     }
     dateClicking = new Date();
     dateToWork = new Date();
     dateToWork.setTime(dateClicking.getTime() + relaxMinutes * 60 * 1000);
-    console.log(dateClicking);
-    console.log(dateToWork);
+    GM_setValue("gMSToWork", dateToWork.getTime().toString());
+    GM_setValue("isOn", true);
     startPulse();
     return true;
   };
@@ -879,20 +885,37 @@ var loaded = function(){
     '每秒检测一次，频率可以更低\n我不喜欢轮询……有更好的方法吗？';
     var dateNow;
     clearTimeout(startPulse);
-    dateNow = new Date();
-    if (dateNow >= dateToWork) {
-      return timeoutAlarm();
+    console.log(GM_getValue("isOn"));
+    if (GM_getValue("isOn")) {
+      dateToWork = new Date();
+      dateToWork.setTime(parseInt(GM_getValue("gMSToWork")));
+      dateNow = new Date();
+      if (dateNow >= dateToWork) {
+        return timeoutAlarm();
+      } else {
+        return pulseCount = setTimeout(startPulse, 1000);
+      }
     } else {
-      return setTimeout(startPulse, 1000);
+      try {
+        easyDialog.close();
+      } catch (_error) {}
+      return pulseCount = setTimeout(startPulse, 1000);
     }
   };
 
   timeoutAlarm = function() {
     return easyDialog.open({
       container: {
-        content: alarmBox
+        content: alarmBox,
+        yesFn: cancelClock
       }
     });
+  };
+
+  cancelClock = function() {
+    GM_setValue("isOn", false);
+    startPulse();
+    return true;
   };
 
   divToAppend = document.createElement("div");
@@ -902,15 +925,21 @@ var loaded = function(){
   document.body.appendChild(divToAppend);
 
   document.getElementById("boxOpen").onclick = function() {
+    clearTimeout(pulseCount);
     return easyDialog.open({
       container: {
         content: configBox,
         yesFn: setClock,
-        noFn: true,
+        noFn: function() {
+          startPulse();
+          return true;
+        },
         yesText: "真的"
       }
     });
   };
+
+  startPulse();
 
   /*
   TODO

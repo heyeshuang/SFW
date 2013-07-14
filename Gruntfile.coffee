@@ -16,6 +16,10 @@ module.exports = (grunt) ->
 // @description   <%= pkg.description %>
 // @include       <%= pkg.include %>
 // @run-at         document-end
+// @grant       GM_getValue
+// @grant       GM_listValues
+// @grant       GM_setValue
+// @grant       GM_log
 // ==/UserScript==
 if (window.top != window.self) return;  //don't run on frames or iframes
 
