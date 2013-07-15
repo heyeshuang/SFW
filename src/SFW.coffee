@@ -7,7 +7,7 @@ fridgeMagnet=
 alarmBox=
   '''
   <div id="alarmBox">
-    <h6>time to work babe</h6>
+    <div>time to work babe</div>
   </div>
   '''
 configBox=
@@ -15,12 +15,13 @@ configBox=
   <div id="configBox">
     <div>我就休息
     <input type="number" name="minuteField" id="minuteField" min="1" size="3"
-    onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')" />
+    value="1" onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')" />
     分钟</div>
   </div>
   '''
 
 dateToWork=0
+pulseCount=0
 
 setClock=()->
   '''
@@ -35,9 +36,8 @@ setClock=()->
   dateClicking=new Date()
   dateToWork=new Date()
   msToWork=dateClicking.getTime()+relaxMinutes*60*1000
-  dateToWork.setTime(msToWork)
+  dateToWork.setTime(parseInt(msToWork))
   localStorage.setItem("msToWork",msToWork)
-  # TODO:localstorage it
   console.log(dateClicking)
   console.log(dateToWork)
   console.log(msToWork)
@@ -49,17 +49,31 @@ startPulse=()->
   每秒检测一次，频率可以更低
   我不喜欢轮询……有更好的方法吗？
   '''
-  clearTimeout(startPulse)
+  clearTimeout(pulseCount)
   dateNow=new Date()
   if dateNow>=dateToWork
     timeoutAlarm()
   else
-    setTimeout(startPulse,1000)
+    pulseCount=setTimeout(startPulse,1000)
+
+cancelClock=()->
+  '''
+  干掉pulse，删掉storage
+  '''
+  clearTimeout(pulseCount)
+  localStorage.removeItem("msToWork")
+  try
+    easyDialog.close()
+  return true
 
 timeoutAlarm=()->
+  '''
+    ......
+  '''
   easyDialog.open(
     container:
       content:alarmBox
+      yesFn:cancelClock
   )
 
 divToAppend=document.createElement("div")
@@ -76,21 +90,35 @@ document.getElementById("boxOpen").onclick=()->
   )
 window.addEventListener("storage",
   (e)->
-    # console.log(e)
+    console.log(e)
     if e.key=="msToWork"
-      dateToWork=new Date()
-      dateToWork.setTime(e.newValue)
-      startPulse()
-      # console.log(dateToWork.getTime())
+      if e.newValue?
+        dateToWork=new Date()
+        dateToWork.setTime(parseInt(e.newValue))
+        startPulse()
+        # console.log(dateToWork.getTime())
+      else
+        cancelClock()
     return
 ,false)
+'''
+页面加载时检测
+'''
+if (msToWork=localStorage.getItem("msToWork"))?
+  console.log(msToWork)
+  dateToWork=new Date()
+  dateToWork.setTime(parseInt(msToWork))
+  startPulse()
+# else
+  # console.log("nothing here")
+
 ###
 TODO
-# 开启即屏蔽：GM-keys
+# 用GM-keys实现部分跨域
 # 取消已开始的计时
+# 树形菜单设置界面
 # 有趣的关闭手段
 DONE
-# <d>多标签状态共享</d> 
+# 多标签状态共享
   # 本地存储
-  >> 不能跨域操作T_T
 ###

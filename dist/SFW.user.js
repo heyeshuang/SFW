@@ -845,15 +845,17 @@ var loaded = function(){
 }).call(this);
 
 (function() {
-  var alarmBox, configBox, dateToWork, divToAppend, fridgeMagnet, setClock, startPulse, timeoutAlarm;
+  var alarmBox, cancelClock, configBox, dateToWork, divToAppend, fridgeMagnet, msToWork, pulseCount, setClock, startPulse, timeoutAlarm;
 
   fridgeMagnet = '<div class="pinned">\n  <a id="boxOpen" href="javascript:;">Click Me</a>\n</div>';
 
-  alarmBox = '<div id="alarmBox">\n  <h6>time to work babe</h6>\n</div>';
+  alarmBox = '<div id="alarmBox">\n  <div>time to work babe</div>\n</div>';
 
-  configBox = '<div id="configBox">\n  <div>我就休息\n  <input type="number" name="minuteField" id="minuteField" min="1" size="3"\n  onkeyup="this.value=this.value.replace(/[^0-9.]/g,\'\')" />\n  分钟</div>\n</div>';
+  configBox = '<div id="configBox">\n  <div>我就休息\n  <input type="number" name="minuteField" id="minuteField" min="1" size="3"\n  value="1" onkeyup="this.value=this.value.replace(/[^0-9.]/g,\'\')" />\n  分钟</div>\n</div>';
 
   dateToWork = 0;
+
+  pulseCount = 0;
 
   setClock = function() {
     '设置休息时间并开始计时';
@@ -869,7 +871,7 @@ var loaded = function(){
     dateClicking = new Date();
     dateToWork = new Date();
     msToWork = dateClicking.getTime() + relaxMinutes * 60 * 1000;
-    dateToWork.setTime(msToWork);
+    dateToWork.setTime(parseInt(msToWork));
     localStorage.setItem("msToWork", msToWork);
     console.log(dateClicking);
     console.log(dateToWork);
@@ -881,19 +883,31 @@ var loaded = function(){
   startPulse = function() {
     '每秒检测一次，频率可以更低\n我不喜欢轮询……有更好的方法吗？';
     var dateNow;
-    clearTimeout(startPulse);
+    clearTimeout(pulseCount);
     dateNow = new Date();
     if (dateNow >= dateToWork) {
       return timeoutAlarm();
     } else {
-      return setTimeout(startPulse, 1000);
+      return pulseCount = setTimeout(startPulse, 1000);
     }
   };
 
+  cancelClock = function() {
+    '干掉pulse，删掉storage';
+    clearTimeout(pulseCount);
+    localStorage.removeItem("msToWork");
+    try {
+      easyDialog.close();
+    } catch (_error) {}
+    return true;
+  };
+
   timeoutAlarm = function() {
+    '......';
     return easyDialog.open({
       container: {
-        content: alarmBox
+        content: alarmBox,
+        yesFn: cancelClock
       }
     });
   };
@@ -917,22 +931,36 @@ var loaded = function(){
   };
 
   window.addEventListener("storage", function(e) {
+    console.log(e);
     if (e.key === "msToWork") {
-      dateToWork = new Date();
-      dateToWork.setTime(e.newValue);
-      startPulse();
+      if (e.newValue != null) {
+        dateToWork = new Date();
+        dateToWork.setTime(parseInt(e.newValue));
+        startPulse();
+      } else {
+        cancelClock();
+      }
     }
   }, false);
 
+  '页面加载时检测';
+
+  if ((msToWork = localStorage.getItem("msToWork")) != null) {
+    console.log(msToWork);
+    dateToWork = new Date();
+    dateToWork.setTime(parseInt(msToWork));
+    startPulse();
+  }
+
   /*
   TODO
-  # 开启即屏蔽：GM-keys
+  # 用GM-keys实现部分跨域
   # 取消已开始的计时
+  # 树形菜单设置界面
   # 有趣的关闭手段
   DONE
-  # <d>多标签状态共享</d> 
+  # 多标签状态共享
     # 本地存储
-    >> 不能跨域操作T_T
   */
 
 
