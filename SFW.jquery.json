@@ -2,7 +2,7 @@
   "name": "SFW",
   "title": "stop forum-watching",
   "description": "an anti-procrastination user script",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "include": "http*://*",
   "homepage": "https://github.com/heyeshuang/SFW",
   "author": {

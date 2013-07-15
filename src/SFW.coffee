@@ -21,6 +21,7 @@ configBox=
   '''
 
 dateToWork=0
+
 setClock=()->
   '''
   设置休息时间并开始计时
@@ -33,10 +34,13 @@ setClock=()->
     return false
   dateClicking=new Date()
   dateToWork=new Date()
-  dateToWork.setTime(dateClicking.getTime()+relaxMinutes*60*1000)
+  msToWork=dateClicking.getTime()+relaxMinutes*60*1000
+  dateToWork.setTime(msToWork)
+  localStorage.setItem("msToWork",msToWork)
   # TODO:localstorage it
   console.log(dateClicking)
   console.log(dateToWork)
+  console.log(msToWork)
   startPulse()
   return true
 
@@ -67,13 +71,26 @@ document.getElementById("boxOpen").onclick=()->
       content:configBox
       yesFn:setClock
       noFn:true
-      yesText:"真的"
+      yesText:"真的!"
+      noText:"逗你玩"
   )
+window.addEventListener("storage",
+  (e)->
+    # console.log(e)
+    if e.key=="msToWork"
+      dateToWork=new Date()
+      dateToWork.setTime(e.newValue)
+      startPulse()
+      # console.log(dateToWork.getTime())
+    return
+,false)
 ###
 TODO
-# 多标签状态共享
-  # 本地存储
-  # startPulse开始即运行
+# 开启即屏蔽：GM-keys
 # 取消已开始的计时
 # 有趣的关闭手段
+DONE
+# <d>多标签状态共享</d> 
+  # 本地存储
+  >> 不能跨域操作T_T
 ###

@@ -31,7 +31,7 @@
 
   setClock = function() {
     '设置休息时间并开始计时';
-    var dateClicking, relaxMinutes;
+    var dateClicking, msToWork, relaxMinutes;
     relaxMinutes = parseFloat(document.getElementById("minuteField").value);
     console.log(relaxMinutes);
     if (isNaN(relaxMinutes)) {
@@ -42,9 +42,12 @@
     }
     dateClicking = new Date();
     dateToWork = new Date();
-    dateToWork.setTime(dateClicking.getTime() + relaxMinutes * 60 * 1000);
+    msToWork = dateClicking.getTime() + relaxMinutes * 60 * 1000;
+    dateToWork.setTime(msToWork);
+    localStorage.setItem("msToWork", msToWork);
     console.log(dateClicking);
     console.log(dateToWork);
+    console.log(msToWork);
     startPulse();
     return true;
   };
@@ -81,18 +84,29 @@
         content: configBox,
         yesFn: setClock,
         noFn: true,
-        yesText: "真的"
+        yesText: "真的!",
+        noText: "逗你玩"
       }
     });
   };
 
+  window.addEventListener("storage", function(e) {
+    if (e.key === "msToWork") {
+      dateToWork = new Date();
+      dateToWork.setTime(e.newValue);
+      startPulse();
+    }
+  }, false);
+
   /*
   TODO
-  # 多标签状态共享
-    # 本地存储
-    # startPulse开始即运行
+  # 开启即屏蔽：GM-keys
   # 取消已开始的计时
   # 有趣的关闭手段
+  DONE
+  # <d>多标签状态共享</d> 
+    # 本地存储
+    >> 不能跨域操作T_T
   */
 
 
