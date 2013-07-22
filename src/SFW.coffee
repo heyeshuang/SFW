@@ -1,13 +1,18 @@
+img64='''
+iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB90HFg8CKzDwrf0AAAAdaVRYdENvbW1lbnQAAAAAAENyZWF0ZWQgd2l0aCBHSU1QZC5lBwAAA1VJREFUOMudlE9o22UYxz/P82bJ0jZU1M60TZtDVWbA+ifpiCnSoZYJEw87qAdRmH8OguguguBhpx7Eo0wPXkVhuwkWO3EoNkkbOqW0VdYq2LRdalxobYvNn9/v8ZJJbdox/d5eeJ4P7/v9Pu8jtErS6fSAqo6qagroA44AmNk68KOZTW1vb0/Pzs7utDTvPWQymQjwrIicFZE0UAVKwB+AB3QAx4CamY2b2cVqtZqfmZmptwAHBwfbOzo63lDV182sU0Qu+74/3mg0rppZRVXN87xgMBi8V0SeFpEXzOy653kX6vX6ZzehAYBkMnkkFAq9pKrvAL8BH1Sr1UuFQuHGAZYU4/F4LhaLzYvIm8658865XeAiYA4gHo8/5px718x+9zzvfC6Xu7S2trbDIdrc3GwUi8W5/v7+deAJETne3d19dXV1dV0TiURQVZ8BjpnZhXw+P9H0q8XjffIqlcqXwOfAw4FA4DSgbmBg4CFVPQdc2djY+LBcLlebAfXEYrFTXV1dG6VSaesgYrlc9qLR6JpzLiMiD0Sj0ayq6gkRiQKXFxYWtv9JS6RLVV8Oh8Njw8PDJ5sT0KJCobBoZleA+wOBwCMKHAe2arXa/N7CycnJOTMbAxrAGHAunU7feQDTzGwKaIjIfaqq/Wa2Cfy536NsNpur1+vvmdmkqo465/oONNPzfgX+MrOoNmeuTUQChzypJCITZrbNbUhF5AZwh4jcc1iRiNRuBWne/KiIlNTMrgERVU3yP6WqjwLOzBYVmAV8EXkymUze/V9hqVSqDxgxs8VGo/GDep43aWbfqepT4XD4OcDdLiyRSARDodArInIC+GJ6evpnzefzq77vfwpUgLOZTObUyMhIYF+KdWDH8zx/L6yzs/OMiLwIzJvZOOA7gPb29mI4HBYROS0iQ2YW7unpWV5ZWdkC6O3trTnnrqvqT8vLy7upVKqvra3tLefc20DI87z3c7nc14D9a31FIpHXRORVIGZm35vZN8Bco9FYuZlmM4AREXkcKJrZR+vr6x8vLS1VWz5/MplsC4VCJ4HnRWRURCLADrDbLDkKRMxMgW993/9ERL7KZrNb3GqbDA0N3RUIBNIikhaRB0WkF4gAFd/3rwFTwEQ2m/1lf+/fxPttOfXp2toAAAAASUVORK5CYII=
+      '''
 fridgeMagnet=
   '''
   <div class="pinned">
-    <a id="boxOpen" href="javascript:;">Click Me</a>
-  </div>
+    <img id="boxOpen" src="data:image/png;base64,
+  '''+img64+'''
+"></div>
   '''
 alarmBox=
   '''
   <div id="alarmBox">
     <div>time to work babe</div>
+    <canvas id="captcha" width="100" height="100"></canvas>
   </div>
   '''
 configBox=
@@ -75,6 +80,10 @@ timeoutAlarm=()->
       content:alarmBox
       yesFn:cancelClock
   )
+  c=document.getElementById("captcha")
+  cxt=c.getContext("2d")
+  cxt.font = "bold 24px serif"
+  cxt.strokeText("你好世界",50,50,400)
 
 divToAppend=document.createElement("div")
 divToAppend.innerHTML=fridgeMagnet

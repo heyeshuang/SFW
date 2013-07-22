@@ -1,30 +1,21 @@
 cssContent='''
   .pinned{
-
-    padding:0 10px;
-
-    line-height:50px;
-
+    padding:3px;
+    line-height:0;
     opacity:0.7;
-
-    background: #FC6;
-
-    border:1px solid #F90;
-
+    background: #afb4db;
+    border-radius: 20px;
+    border:0px solid red;
     position:fixed;
-
     left:10px;
-
     bottom:10px;
-
     }
+
   .invisible{
-
     display:none;
-
     cursor: default;
-
     }
+
 button::-moz-focus-inner{
  border:0;
  padding:0;
