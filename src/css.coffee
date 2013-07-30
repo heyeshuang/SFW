@@ -15,6 +15,9 @@ cssContent='''
     display:none;
     cursor: default;
     }
+  #configBox{
+    width:320px;
+    }
 
 button::-moz-focus-inner{
  border:0;
@@ -23,7 +26,6 @@ button::-moz-focus-inner{
  }
 
 .easyDialog_wrapper{
- width:320px;
  color:#444;
  border:3px solid rgba(0,0,0,0);
  -webkit-border-radius:5px;

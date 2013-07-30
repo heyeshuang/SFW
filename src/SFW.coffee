@@ -11,8 +11,9 @@ fridgeMagnet=
 alarmBox=
   '''
   <div id="alarmBox">
-    <div>time to work babe</div>
-    <canvas id="captcha" width="100" height="100"></canvas>
+    <div>工作时间到</div>
+    <canvas id="captcha" width="400" height="30"></canvas><br>
+    <input type="text" name="captchaIn" id="captchaIn" size="30" style="width:80%;">
   </div>
   '''
 configBox=
@@ -27,7 +28,16 @@ configBox=
 
 dateToWork=0
 pulseCount=0
-
+msToCoolDown=1*3600*1000
+longWords=["我荒废的今日，正是昨日殒身之人祈求的明日",
+           "Procrastination",
+           "拖延的基础实际上是对自身不切实际的期望",
+           "the longer you wait the worse it gets",
+           "停止空谈，开始行动"]
+'''
+不要超过20个中文字符
+上面都是我编的，我编不下去了
+'''
 setClock=()->
   '''
   设置休息时间并开始计时
@@ -75,15 +85,22 @@ timeoutAlarm=()->
   '''
     ......
   '''
+  longWord=longWords[Math.floor(Math.random()*longWords.length)]
+  setTimeout(cancelClock,msToCoolDown)
   easyDialog.open(
     container:
       content:alarmBox
-      yesFn:cancelClock
+      yesFn:()->
+        if longWord == document.getElementById("captchaIn").value
+          cancelClock()
+        else
+          return false
   )
   c=document.getElementById("captcha")
   cxt=c.getContext("2d")
-  cxt.font = "bold 24px serif"
-  cxt.strokeText("你好世界",50,50,400)
+  cxt.font = "20px serif"
+  cxt.textBaseline="top"
+  cxt.fillText(longWord,0,5,600)
 
 divToAppend=document.createElement("div")
 divToAppend.innerHTML=fridgeMagnet
@@ -97,6 +114,9 @@ document.getElementById("boxOpen").onclick=()->
       yesText:"真的!"
       noText:"逗你玩"
   )
+'''
+页面间通信
+'''
 window.addEventListener("storage",
   (e)->
     console.log(e)
@@ -126,8 +146,10 @@ TODO
 # 用GM-keys实现部分跨域
 # 取消已开始的计时
 # 树形菜单设置界面
-# 有趣的关闭手段
+# 改变颜色
+# 让图标变得可动！！！
 DONE
 # 多标签状态共享
   # 本地存储
+# 有趣的关闭手段
 ###
