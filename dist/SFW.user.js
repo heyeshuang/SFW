@@ -851,7 +851,7 @@ var loaded = function(){
 
   fridgeMagnet = '<div class="pinned">\n  <img id="boxOpen" src="data:image/png;base64,' + img64 + '"></div>';
 
-  alarmBox = '<div id="alarmBox">\n  <div>工作时间到</div>\n  <canvas id="captcha" width="400" height="30"></canvas><br>\n  <input type="text" name="captchaIn" id="captchaIn" size="30" style="width:80%;">\n</div>';
+  alarmBox = '<div id="alarmBox">\n  <div>工作时间到</div>\n  <div>请输入以下文字：</div>\n  <canvas id="captcha" width="400" height="30"></canvas><br>\n  <input type="text" name="captchaIn" id="captchaIn" size="30" style="width:80%;">\n</div>';
 
   configBox = '<div id="configBox">\n  <div>我就休息\n  <input type="number" name="minuteField" id="minuteField" min="1" size="3"\n  value="1" onkeyup="this.value=this.value.replace(/[^0-9.]/g,\'\')" />\n  分钟</div>\n</div>';
 

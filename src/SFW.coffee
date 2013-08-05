@@ -12,6 +12,7 @@ alarmBox=
   '''
   <div id="alarmBox">
     <div>工作时间到</div>
+    <div>请输入以下文字：</div>
     <canvas id="captcha" width="400" height="30"></canvas><br>
     <input type="text" name="captchaIn" id="captchaIn" size="30" style="width:80%;">
   </div>
